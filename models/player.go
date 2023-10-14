@@ -7,4 +7,5 @@ type Player struct {
 	Password  string `gorm:"column:password;type(varchar(50))" json:"password" `
 	Email     string `gorm:"column:email;type(varchar(100));unique;not null" json:"email" `
 	Phone     string `gorm:"column:phone;type(varchar(20))" json:"phone" `
+	Balance   int64  `gorm:"column:balance;type(bigint)" json:"balance" `
 }

@@ -36,6 +36,7 @@ func ConnectDatabse() {
 		&TokenSession{},
 		&Bank{},
 		&PlayersBank{},
+		&Transaction{},
 	)
 
 	DB = db

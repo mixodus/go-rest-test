@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mixodus/go-rest-test/controllers/bankcontroller"
 	"github.com/mixodus/go-rest-test/controllers/playercontroller"
+	"github.com/mixodus/go-rest-test/controllers/transactioncontroller"
 	"github.com/mixodus/go-rest-test/middleware"
 	"github.com/mixodus/go-rest-test/models"
 	"github.com/mixodus/go-rest-test/services"
@@ -48,6 +49,9 @@ func main() {
 		authorized.GET("/player/bank", bankcontroller.GetPlayerBank)
 		authorized.POST("/player/bank", bankcontroller.AddPlayerBank)
 		authorized.DELETE("/player/bank", bankcontroller.RemovePlayerBank)
+
+		//TRANSACTION ROUTES
+		authorized.POST("/transaction/topup", transactioncontroller.TopUp)
 	}
 
 	unauth := r.Group("/api")

@@ -23,6 +23,10 @@ func GetErrorMsg(fe validator.FieldError) string {
 		return "Should be less than " + fe.Param() + " characters"
 	case "email":
 		return "Should be a valid email address"
+	case "number":
+		return "Should be a number"
+	case "file":
+		return "Should be a file"
 	}
 
 	return "Unknown error"

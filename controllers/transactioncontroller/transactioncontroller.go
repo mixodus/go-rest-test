@@ -11,10 +11,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/mixodus/go-rest-test/dto"
+	"github.com/mixodus/go-rest-test/models"
 	"github.com/mixodus/go-rest-test/services"
 )
 
 func TopUp(c *gin.Context) {
+	//GET PLAYER TOKEN
+	player, err := services.GetUserByToken(c)
+	if err != nil {
+		res := dto.Response{
+			Status:  false,
+			Message: "Player might not exist...",
+			Data:    err.Error(),
+		}
+		c.JSON(http.StatusNotFound, res)
+		return
+	}
 	//GET INPUT REQUEST & VALIDATE
 	var topUpRequest dto.TopUpRequest
 	if err := c.ShouldBind(&topUpRequest); err != nil {
@@ -55,9 +67,8 @@ func TopUp(c *gin.Context) {
 
 	//CHECK FILE TYPE
 	allowedMimeTypes := map[string]bool{
-		"image/jpeg":      true,
-		"image/png":       true,
-		"application/pdf": true,
+		"image/jpeg": true,
+		"image/png":  true,
 		// Add more allowed MIME types as needed
 	}
 
@@ -66,7 +77,7 @@ func TopUp(c *gin.Context) {
 	if !allowedMimeTypes[fileType] {
 		res := dto.Response{
 			Status:  false,
-			Message: "JPEG, PNG, PDF only",
+			Message: "Image JPEG & PNG only",
 			Data:    fileType,
 		}
 		c.AbortWithStatusJSON(http.StatusBadRequest, res)
@@ -74,7 +85,7 @@ func TopUp(c *gin.Context) {
 	}
 
 	//CREATE UPLOAD DIRECTORY
-	uploadDir := "./uploads/"
+	uploadDir := "./uploads/transaction"
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
 		res := dto.Response{
 			Status:  false,
@@ -103,10 +114,42 @@ func TopUp(c *gin.Context) {
 		return
 	}
 
+	//GET PLAYER BANK
+	var playersBank models.PlayersBank
+	if err := models.DB.Where("player_id = ?", player.Id).First(&playersBank).Error; err != nil {
+		res := dto.Response{
+			Status:  false,
+			Message: "Player's might not have bank account",
+			Data:    nil,
+		}
+		if err.Error() == "record not found" {
+			c.AbortWithStatusJSON(http.StatusOK, res)
+			return
+		}
+		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+	//SAVE TRANSACTION
+	var transaction models.Transaction
+	transaction.PlayerId = player.Id
+	transaction.PlayersBankId = playersBank.Id
+	transaction.Amount = topUpRequest.Amount
+	transaction.TransactionType = models.DEPOSIT
+	transaction.FileName = uniqueFileName
+	if err := models.DB.Create(&transaction).Error; err != nil {
+		res := dto.Response{
+			Status:  false,
+			Message: "Error saving transaction",
+			Data:    nil,
+		}
+		c.JSON(http.StatusInternalServerError, res)
+		return
+	}
+
 	res := dto.Response{
 		Status:  true,
 		Message: "File",
-		Data:    file,
+		Data:    transaction,
 	}
 
 	c.JSON(http.StatusOK, res)

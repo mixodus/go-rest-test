@@ -23,6 +23,8 @@ func main() {
 		c.Next()
 	})
 
+	r.Static("/uploads", "./uploads")
+
 	//START DATABASE
 	models.ConnectDatabse()
 
@@ -62,6 +64,9 @@ func main() {
 
 		//BANK ROUTES
 		unauth.GET("/banks", bankcontroller.BankList)
+
+		//GET IMAGE
+		unauth.GET("/image", services.GetImage)
 	}
 
 	r.Run()

@@ -6,7 +6,7 @@ Go: go version go1.21.3 darwin/arm64
   
 ## Getting Started
 
-clone project
+Clone the project
 
 ```
 git clone https://github.com/mixodus/go-rest-test.git

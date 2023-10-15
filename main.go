@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/mixodus/go-rest-test/controllers/bankcontroller"
 	"github.com/mixodus/go-rest-test/controllers/playercontroller"
 	"github.com/mixodus/go-rest-test/controllers/transactioncontroller"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	godotenv.Load()
 	r := gin.Default()
 	r.Use(func(c *gin.Context) {
 		// Set the Content-Type header to "application/json"
@@ -23,6 +25,8 @@ func main() {
 		c.Next()
 	})
 
+	trustedProxies := []string{"localhost", "127.0.0.1"}
+	r.SetTrustedProxies(trustedProxies)
 	r.Static("/uploads", "./uploads")
 
 	//START DATABASE
@@ -78,5 +82,5 @@ func main() {
 		unauth.GET("/image", services.GetImage)
 	}
 
-	r.Run()
+	r.Run(":8080")
 }

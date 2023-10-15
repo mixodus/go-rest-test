@@ -1,0 +1,737 @@
+{
+	"info": {
+		"_postman_id": "69905f7b-9607-4b5f-aeda-bc11db600391",
+		"name": "GO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14698127"
+	},
+	"item": [
+		{
+			"name": "Player",
+			"item": [
+				{
+					"name": "Login & Register & Logout",
+					"item": [
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Ivan Yunus\",\n    \"last_name\": \"Kolotosa\",\n    \"email\": \"ivanyunus26@gmail.comss\",\n    \"password\": \"ivan123\",\n    \"phone\": \"087897820125\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"ivanyunus26@gmail.com\",\n    \"password\": \"ivan123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/logout",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Profile",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"ivanyunus26@gmail.com\",\n    \"password\": \"ivan123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/profile",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Player's Bank",
+					"item": [
+						{
+							"name": "Player Bank",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bank_code\": \"002\",\n    \"account_number\": \"12345\",\n    \"account_name\": \"Admira\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/player/bank",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"player",
+										"bank"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Player Bank",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bank_code\": \"002\",\n    \"account_number\": \"12345\",\n    \"account_name\": \"Admira\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/player/bank",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"player",
+										"bank"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Player Bank",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bank_code\": \"002\",\n    \"account_number\": \"12345\",\n    \"account_name\": \"Ivan\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/player/bank",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"player",
+										"bank"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Player's Wallet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/wallet",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Players",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/players?player_created_at_after=2006-01-02&player_created_at_before=2023-10-13&first_name=Ivan",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"players"
+							],
+							"query": [
+								{
+									"key": "player_created_at_after",
+									"value": "2006-01-02",
+									"description": "yyyy-mm-dd"
+								},
+								{
+									"key": "player_created_at_before",
+									"value": "2023-10-13",
+									"description": "yyyy-mm-dd"
+								},
+								{
+									"key": "first_name",
+									"value": "Ivan",
+									"description": "Uppercase / Lowercase"
+								},
+								{
+									"key": "last_name",
+									"value": "Kolotosa",
+									"description": "Uppercase / Lowercase",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "gmail.com",
+									"description": "email",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "0125",
+									"description": "087897820125",
+									"disabled": true
+								},
+								{
+									"key": "balance_bigger_than",
+									"value": "0",
+									"description": "balance number",
+									"disabled": true
+								},
+								{
+									"key": "balance_less_than",
+									"value": "0",
+									"description": "balance number",
+									"disabled": true
+								},
+								{
+									"key": "account_name",
+									"value": "Admira",
+									"description": "account name || deactivate other queryParams to use this",
+									"disabled": true
+								},
+								{
+									"key": "account_number",
+									"value": "123",
+									"description": "account number || deactivate other queryParams to use this",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Player by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/player/c07a3794-1461-4cf4-ab32-8a8db89140b2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"player",
+								"c07a3794-1461-4cf4-ab32-8a8db89140b2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Banks",
+			"item": [
+				{
+					"name": "Banks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ivanyunus26@gmail.com\",\n    \"password\": \"ivan123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/banks",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"banks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Top Up (DEBIT)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "amount",
+									"value": "10000",
+									"description": "amount of money to top up",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"description": "the proof of receipt for manual top up transfer",
+									"type": "file",
+									"src": "/Users/ivanyunus_/Downloads/Screenshot-1014-93901 a.m..png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/topup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"topup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Spent Something (CREDIT)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 10000,\n    \"notes\": \"Buying something~from certain transaction\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/spent",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"spent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Debit Success",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/debit-success",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"debit-success"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Credit Success",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/credit-success",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"credit-success"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/image?path=uploads/transaction/1697344496-Screenshot-1014-93901 a.m..png",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"image"
+					],
+					"query": [
+						{
+							"key": "path",
+							"value": "uploads/transaction/1697344496-Screenshot-1014-93901 a.m..png"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQyMzBkNjljLTUwODUtNGUzYy04N2I3LTc3NGJjMjc2ZDFiMCIsImVtYWlsIjoiaXZhbnl1bnVzMjZAZ21haWwuY29tIiwiaXNzIjoiUGxheWVyIiwiZXhwIjoxNjk3NDQ0NzQyfQ.-27mCDh3dpXEGQ1Eo2Xeh6Ee0vm4__Oj05ryHYLqx2E",
+			"type": "string"
+		}
+	]
+}

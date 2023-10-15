@@ -58,6 +58,9 @@ Cheers!!🥂✨
 
 ### Postman Collection Preview
 * Filtering `Players` Key and Value
+  
   ![image](https://github.com/mixodus/go-rest-test/assets/58242458/0d39707a-c7c0-4995-a99a-80248eaf16b4)
+  
 * Postman Collection Folder Preview
+  
   <img width="288" alt="Screenshot 2023-10-15 at 18 20 44" src="https://github.com/mixodus/go-rest-test/assets/58242458/f8beaa15-4d0d-4040-a4f4-d3796399cdc8">

@@ -56,7 +56,74 @@ func LoginViaRedis(c *gin.Context, userInput *dto.LoginRequest, session string) 
 	}
 }
 
-func FilterPlayer(c *gin.Context, player *models.Player) models.Player {
-	player.Password = ""
-	return *player
+func FilterPlayer(c *gin.Context) (interface{}, error) {
+	firstName := c.DefaultQuery("first_name", "")
+	lastName := c.DefaultQuery("last_name", "")
+	email := c.DefaultQuery("email", "")
+	phone := c.DefaultQuery("phone", "")
+	balance_bigger_than := c.DefaultQuery("balance_bigger_than", "")
+	balance_less_than := c.DefaultQuery("balance_less_than", "")
+	account_name := c.DefaultQuery("account_name", "")
+	account_number := c.DefaultQuery("account_number", "")
+	player_created_at_after := c.DefaultQuery("player_created_at_after", "")
+	player_created_at_before := c.DefaultQuery("player_created_at_before", "")
+
+	var player []dto.Player
+	// models.DB.Joins("PlayersBank").Find(&player)
+	query := models.DB.Table("players").
+		Joins("LEFT JOIN players_banks ON players.id = players_banks.player_id").
+		Joins("LEFT JOIN banks ON players_banks.bank_id = banks.id")
+	if firstName != "" {
+		lowerCase, titleCase := LowerCaseTitleCase(firstName)
+		query = query.Where("players.first_name LIKE ?", "%"+lowerCase+"%").
+			Or("players.first_name LIKE ?", "%"+titleCase+"%")
+	}
+	if lastName != "" {
+		lowerCase, titleCase := LowerCaseTitleCase(lastName)
+		query = query.Where("players.last_name LIKE ?", "%"+lowerCase+"%").
+			Or("players.last_name LIKE ?", "%"+titleCase+"%")
+	}
+	if email != "" {
+		lowerCaseEmail := ToLowerCase(email)
+		query = query.Where("players.email LIKE ?", "%"+lowerCaseEmail+"%")
+	}
+	if phone != "" {
+		query = query.Where("players.phone LIKE ?", "%"+phone+"%")
+	}
+	if balance_bigger_than != "" {
+		query = query.Where("players.balance >= ?", balance_bigger_than)
+	}
+	if balance_less_than != "" {
+		query = query.Where("players.balance <= ?", balance_less_than)
+	}
+	if account_name != "" {
+		lowerCase, titleCase := LowerCaseTitleCase(firstName)
+		query = query.Where("players_banks.bank_account_name LIKE ?", "%"+lowerCase+"%").
+			Or("players_banks.bank_account_name LIKE ?", "%"+titleCase+"%")
+	}
+	if account_number != "" {
+		query = query.Where("players_banks.bank_account_number LIKE ?", "%"+account_number+"%")
+	}
+	fmt.Println("player_created_at_after: " + player_created_at_after)
+	if player_created_at_after != "" {
+		created_at_after, err := time.Parse("2006-01-02", player_created_at_after)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(created_at_after)
+		query = query.Where("players.created_at >= ?", created_at_after)
+	}
+	fmt.Println("player_created_at_before: " + player_created_at_before)
+	if player_created_at_before != "" {
+		created_at_before, err := time.Parse("2006-01-02", player_created_at_before)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(created_at_before)
+		query = query.Where("players.created_at <= ?", created_at_before)
+	}
+
+	query.Preload("PlayersBank.Bank").Find(&player)
+
+	return player, nil
 }

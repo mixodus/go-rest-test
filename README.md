@@ -41,3 +41,14 @@ There are few things that need to be setup before running `go run main.go` comma
 
 Cheers!!🥂✨
 
+
+
+
+### Explanation
+
+* `Login` uses redis to store session, if player re-login then player need to use new token else unauthorized.
+* Same as for `Logout`, uses redis. If player logout then no token in redis for check, so in any ways players always will be unautorized untill player do login again.
+* For `Wallet` I create `transaction` table to count and refresh player's balance. `GET` API for `Player's Wallet` will always re-sum or count between transaction_type(DEBIT/CREDIT) and restore it in `players.balance` column
+* `transaction` has statuses, re-sum or count between transaction_type(DEBIT/CREDIT) only applies on `success` statuses. I've make public APIs on pretend to be `ADMIN` for changing statuses to `success`. APIs are `Set Debit Success` && `Set Credit Success`
+* `Top Up` transaction request need file to be uploaded, file path will stored at `players_banks.file_name` table. You can try to access file path manually from DBMS or pgAdmin4 then copy it and access the file source via ```http://localhost:8080/api/image?path=<file_path>``` !! .uploads folder is `gitignored` !! folder will automatically created if not exist.
+

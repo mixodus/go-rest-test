@@ -17,6 +17,7 @@ There are few things that need to be setup before running `go run main.go` comma
 ### Prerequisites
 
 * Setup Database
+  
   1. We use PostGreSQL. Create new database, and feel free to name the database.
   2. Restore or Import  `go_test.sql` /  `go_test.backup` to your new database.
 

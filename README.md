@@ -57,4 +57,7 @@ Cheers!!🥂✨
 * `Top Up` transaction request need file to be uploaded, file path will stored at `players_banks.file_name` table. You can try to access file path manually from DBMS or pgAdmin4 then copy it and access the file source via ```http://localhost:8080/api/image?path=<file_path>``` !! .uploads folder is `gitignored` !! folder will automatically created if not exist.
 
 ### Postman Collection Preview
-<img width="288" alt="Screenshot 2023-10-15 at 18 20 44" src="https://github.com/mixodus/go-rest-test/assets/58242458/f8beaa15-4d0d-4040-a4f4-d3796399cdc8">
+* Filtering `Players` Key and Value
+  ![image](https://github.com/mixodus/go-rest-test/assets/58242458/0d39707a-c7c0-4995-a99a-80248eaf16b4)
+* Postman Collection Folder Preview
+  <img width="288" alt="Screenshot 2023-10-15 at 18 20 44" src="https://github.com/mixodus/go-rest-test/assets/58242458/f8beaa15-4d0d-4040-a4f4-d3796399cdc8">

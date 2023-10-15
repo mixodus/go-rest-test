@@ -30,7 +30,7 @@ func Index(c *gin.Context) {
 func GetPlayerById(c *gin.Context) {
 	id := c.Param("id")
 	var player dto.Player
-	if err := models.DB.Where("id = ?", id).First(&player).Error; err != nil {
+	if err := models.DB.Where("id = ?", id).Preload("PlayersBank.Bank").First(&player).Error; err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
 			services.Response(c, http.StatusBadRequest, false, "User not found", err.Error())

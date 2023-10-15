@@ -52,3 +52,5 @@ Cheers!!🥂✨
 * `transaction` has statuses, re-sum or count between transaction_type(DEBIT/CREDIT) only applies on `success` statuses. I've make public APIs on pretend to be `ADMIN` for changing statuses to `success`. APIs are `Set Debit Success` && `Set Credit Success`
 * `Top Up` transaction request need file to be uploaded, file path will stored at `players_banks.file_name` table. You can try to access file path manually from DBMS or pgAdmin4 then copy it and access the file source via ```http://localhost:8080/api/image?path=<file_path>``` !! .uploads folder is `gitignored` !! folder will automatically created if not exist.
 
+### Postman Collection Preview
+<img width="288" alt="Screenshot 2023-10-15 at 18 20 44" src="https://github.com/mixodus/go-rest-test/assets/58242458/f8beaa15-4d0d-4040-a4f4-d3796399cdc8">

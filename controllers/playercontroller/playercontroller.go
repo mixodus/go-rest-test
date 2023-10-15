@@ -18,12 +18,75 @@ import (
 )
 
 func Index(c *gin.Context) {
-	joinCondition := "players.id = players_banks.player_id"
-	var player []models.Player
-	models.DB.Joins("JOIN players_banks ON " + joinCondition).Find(&player)
+	firstName := c.DefaultQuery("first_name", "")
+	lastName := c.DefaultQuery("last_name", "")
+	email := c.DefaultQuery("email", "")
+	phone := c.DefaultQuery("phone", "")
+	balance_bigger_than := c.DefaultQuery("balance_bigger_than", "")
+	balance_less_than := c.DefaultQuery("balance_less_than", "")
+	account_name := c.DefaultQuery("account_name", "")
+	account_number := c.DefaultQuery("account_number", "")
+	player_created_at_after := c.DefaultQuery("player_created_at_after", "")
+	player_created_at_before := c.DefaultQuery("player_created_at_before", "")
 
-	query := models.DB.Dialector.Explain("SELECT * FROM players JOIN players_banks ON " + joinCondition)
-	fmt.Println(query)
+	var player []dto.Player
+	// models.DB.Joins("PlayersBank").Find(&player)
+	query := models.DB.Table("players").
+		Joins("LEFT JOIN players_banks ON players.id = players_banks.player_id").
+		Joins("LEFT JOIN banks ON players_banks.bank_id = banks.id")
+	if firstName != "" {
+		lowerCase, titleCase := services.LowerCaseTitleCase(firstName)
+		query = query.Where("players.first_name LIKE ?", "%"+lowerCase+"%").
+			Or("players.first_name LIKE ?", "%"+titleCase+"%")
+	}
+	if lastName != "" {
+		lowerCase, titleCase := services.LowerCaseTitleCase(lastName)
+		query = query.Where("players.last_name LIKE ?", "%"+lowerCase+"%").
+			Or("players.last_name LIKE ?", "%"+titleCase+"%")
+	}
+	if email != "" {
+		lowerCaseEmail := services.ToLowerCase(email)
+		query = query.Where("players.email LIKE ?", "%"+lowerCaseEmail+"%")
+	}
+	if phone != "" {
+		query = query.Where("players.phone LIKE ?", "%"+phone+"%")
+	}
+	if balance_bigger_than != "" {
+		query = query.Where("players.balance >= ?", balance_bigger_than)
+	}
+	if balance_less_than != "" {
+		query = query.Where("players.balance <= ?", balance_less_than)
+	}
+	if account_name != "" {
+		lowerCase, titleCase := services.LowerCaseTitleCase(firstName)
+		query = query.Where("players_banks.bank_account_name LIKE ?", "%"+lowerCase+"%").
+			Or("players_banks.bank_account_name LIKE ?", "%"+titleCase+"%")
+	}
+	if account_number != "" {
+		query = query.Where("players_banks.bank_account_number LIKE ?", "%"+account_number+"%")
+	}
+	fmt.Println("player_created_at_after: " + player_created_at_after)
+	if player_created_at_after != "" {
+		created_at_after, err := time.Parse("2006-01-02", player_created_at_after)
+		if err != nil {
+			c.JSON(400, gin.H{"error": "Invalid date format"})
+			return
+		}
+		fmt.Println(created_at_after)
+		query = query.Where("players.created_at >= ?", created_at_after)
+	}
+	fmt.Println("player_created_at_before: " + player_created_at_before)
+	if player_created_at_before != "" {
+		created_at_before, err := time.Parse("2006-01-02", player_created_at_before)
+		if err != nil {
+			c.JSON(400, gin.H{"error": "Invalid date format"})
+			return
+		}
+		fmt.Println(created_at_before)
+		query = query.Where("players.created_at <= ?", created_at_before)
+	}
+
+	query.Preload("PlayersBank.Bank").Find(&player)
 
 	res := dto.Response{
 		Status:  true,
@@ -94,11 +157,12 @@ func Register(c *gin.Context) {
 	userInput.Password = string(hashPassword)
 
 	//SET DATA TO STORE FROM INPUT
+	lowerCaseEmail := services.ToLowerCase(userInput.Email)
 	dataPost := models.Player{
 		FirstName: userInput.FirstName,
 		LastName:  userInput.LastName,
 		Password:  userInput.Password,
-		Email:     userInput.Email,
+		Email:     lowerCaseEmail,
 		Phone:     userInput.Phone,
 	}
 

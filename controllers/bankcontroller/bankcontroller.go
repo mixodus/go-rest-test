@@ -80,25 +80,26 @@ func AddPlayerBank(c *gin.Context) {
 			Bank:              bank,
 		}
 		models.DB.Create(&playersBank)
+
+		//UPDATE PLAYER'S BANK ID
+		playersBankId := &playersBank.Id
+		player.PlayersBankId = playersBankId
+		if err := models.DB.Where("id = ?", player.Id).Save(&player).Error; err != nil {
+			res := dto.Response{
+				Status:  false,
+				Message: "Failed to update players bank id",
+				Data:    err,
+			}
+			c.AbortWithStatusJSON(http.StatusBadRequest, res)
+			return
+		}
+
 		res := dto.Response{
 			Status:  true,
 			Message: "Success",
 			Data:    playersBank,
 		}
 		c.JSON(http.StatusOK, res)
-		return
-	}
-
-	//UPDATE PLAYER'S BANK ID
-	playersBankId := &playersBank.Id
-	player.PlayersBankId = playersBankId
-	if err := models.DB.Where("id = ?", player.Id).Save(&player).Error; err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Failed to update players bank id",
-			Data:    err,
-		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
 		return
 	}
 

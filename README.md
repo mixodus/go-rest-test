@@ -1,10 +1,17 @@
 <!-- GETTING STARTED -->
-## Getting Started
+### Built With
 
-There are few things that need to be setup before runnung `go run main.go` at the root project.
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+
+* [![Go][Next.js]][Next-url]
+* [![React][React.js]][React-url]
+* 
+## Getting Started
+Go: go version go1.21.3 darwin/arm64
+
+There are few things that need to be setup before running `go run main.go` command at the root project.
 
 ### Prerequisites
-
 * Setup Database
   1. We use PostGreSQL. Create new database, and feel free to name the database.
   2. Restore or Import  `go_test.sql` /  `go_test.backup` to your new database.

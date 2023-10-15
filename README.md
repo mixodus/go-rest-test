@@ -9,6 +9,7 @@ Go: go version go1.21.3 darwin/arm64
 There are few things that need to be setup before running `go run main.go` command at the root project.
 
 ### Prerequisites
+
 * Setup Database
   1. We use PostGreSQL. Create new database, and feel free to name the database.
   2. Restore or Import  `go_test.sql` /  `go_test.backup` to your new database.

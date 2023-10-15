@@ -10,8 +10,8 @@ const (
 )
 
 const (
-	DEPOSIT  TransactionType = "deposit"
-	WITHDRAW TransactionType = "withdraw"
+	DEBIT  TransactionType = "debit"
+	CREDIT TransactionType = "credit"
 )
 
 type Transaction struct {
@@ -22,4 +22,5 @@ type Transaction struct {
 	Status          Status          `gorm:"column:status;default:'pending'" json:"status"`
 	TransactionType TransactionType `gorm:"column:transaction_type;not null" json:"transaction_type"`
 	FileName        string          `gorm:"column:file_name;type:varchar(255)" json:"file_name"`
+	Notes           string          `gorm:"column:notes;type:varchar(255)" json:"notes"`
 }

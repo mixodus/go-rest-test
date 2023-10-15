@@ -18,12 +18,49 @@ import (
 )
 
 func Index(c *gin.Context) {
-	var player []dto.Player
-	models.DB.Find(&player)
+	joinCondition := "players.id = players_banks.player_id"
+	var player []models.Player
+	models.DB.Joins("JOIN players_banks ON " + joinCondition).Find(&player)
+
+	query := models.DB.Dialector.Explain("SELECT * FROM players JOIN players_banks ON " + joinCondition)
+	fmt.Println(query)
 
 	res := dto.Response{
 		Status:  true,
 		Message: "Success",
+		Data:    player,
+	}
+
+	c.JSON(http.StatusOK, res)
+}
+
+func GetPlayerById(c *gin.Context) {
+	id := c.Param("id")
+	var player dto.Player
+	if err := models.DB.Where("id = ?", id).First(&player).Error; err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			res := dto.Response{
+				Status:  false,
+				Message: "User not found",
+				Data:    err.Error(),
+			}
+			c.JSON(http.StatusBadRequest, res)
+			return
+		default:
+			res := dto.Response{
+				Status:  false,
+				Message: "Internal Server Error",
+				Data:    err.Error(),
+			}
+			c.JSON(http.StatusBadRequest, res)
+			return
+		}
+	}
+
+	res := dto.Response{
+		Status:  true,
+		Message: "Get player by ID",
 		Data:    player,
 	}
 
@@ -257,6 +294,7 @@ func Profile(c *gin.Context) {
 		Email:     player.Email,
 		Phone:     player.Phone,
 		Id:        player.Id,
+		Balance:   player.Balance,
 	}
 	res := dto.Response{
 		Status:  true,

@@ -40,10 +40,9 @@ func main() {
 	fmt.Print("\n\n")
 
 	// ==== API ROUTES ====
-	authorized := r.Group("/api", middleware.Authenticate)
+	authorized := r.Group("/api", middleware.Authenticate) //middleware
 	{
 		// PLAYER ROUTES
-		authorized.GET("/players", playercontroller.Index)
 		authorized.GET("/profile", playercontroller.Profile)
 		authorized.DELETE("/logout", playercontroller.Logout)
 
@@ -53,7 +52,11 @@ func main() {
 		authorized.DELETE("/player/bank", bankcontroller.RemovePlayerBank)
 
 		//TRANSACTION ROUTES
-		authorized.POST("/transaction/topup", transactioncontroller.TopUp)
+		authorized.POST("/transaction/topup", transactioncontroller.TopUp) // create transaction topup (debit)
+		authorized.POST("/transaction/spent", transactioncontroller.Spent) // create transaction spent (credit)
+
+		//WALLET ROUTES
+		authorized.GET("/wallet", transactioncontroller.GetAndUpdateWallet)
 	}
 
 	unauth := r.Group("/api")
@@ -61,6 +64,12 @@ func main() {
 		// LOGIN & REGISTER ROUTE
 		unauth.POST("/register", playercontroller.Register)
 		unauth.POST("/login", playercontroller.Login)
+
+		//ADMIN ROUTES (ADMIN ONLY) <- but for now, everyone can access this route because we don't have admin role yet
+		unauth.GET("/players", playercontroller.Index)
+		unauth.GET("/player/:id", playercontroller.GetPlayerById)
+		unauth.PUT("/transaction/debit-success", transactioncontroller.SetAllDebitStatusSuccess)   //set all debit transaction to success
+		unauth.PUT("/transaction/credit-success", transactioncontroller.SetAllCreditStatusSuccess) //set all credit transaction to success
 
 		//BANK ROUTES
 		unauth.GET("/banks", bankcontroller.BankList)

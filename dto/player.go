@@ -1,6 +1,8 @@
 package dto
 
-import "time"
+import (
+	"time"
+)
 
 // request
 type RegisterRequest struct {
@@ -30,6 +32,7 @@ type ProfileResponse struct {
 	LastName  string `json:"last_name"`
 	Email     string `json:"email"`
 	Phone     string `json:"phone"`
+	Balance   int64  `json:"balance"`
 }
 
 // userlist response
@@ -44,7 +47,9 @@ type Player struct {
 	Base
 	FirstName string `gorm:"column:first_name" json:"first_name" binding:"required"`
 	LastName  string `gorm:"column:last_name" json:"last_name" binding:"required"`
-	Password  string `gorm:"column:password" json:"password" binding:"required"`
+	Password  string `gorm:"column:password" json:"-" binding:"required"`
 	Email     string `gorm:"column:email" json:"email" binding:"required"`
 	Phone     string `gorm:"column:phone" json:"phone" binding:"required"`
+	Balance   int64  `gorm:"column:balance" json:"balance"`
+	// PlayersBank models.PlayersBank
 }

@@ -37,3 +37,7 @@ There are few things that need to be setup before running `go run main.go` comma
 * Import Postman Collection
   Import `GO.postman_collection.json` to your desired software to test the APIs.
 
+
+
+Cheers!!🥂✨
+

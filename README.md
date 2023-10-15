@@ -3,9 +3,9 @@
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
-* [![Go][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* 
+* <a href="https://go.dev/">GO<a>
+* <a href="https://gin-gonic.com/">GIN<a>
+  
 ## Getting Started
 Go: go version go1.21.3 darwin/arm64
 

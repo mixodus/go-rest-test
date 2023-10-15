@@ -52,7 +52,7 @@ Cheers!!🥂✨
 * Players need to have Bank information in order to make `Top Up` or transactions.
 * Players only can have ONE bank information. If want to update or make a new one, player need to delete previous bank by hit/consume `DELETE Player Bank` API.
 * `transaction` has statuses, re-sum or count between `transaction.transaction_type` (DEBIT/CREDIT) only applies on `success` statuses. I've make public APIs on pretend to be `ADMIN` for changing statuses to `success`. APIs are `Set Debit Success` && `Set Credit Success`
-* Public APIs on pretend to be `ADMIN` is for getting player list too. `GET Players`
+* Public APIs on pretend to be `ADMIN` is for getting player list too. `GET Players` && `GET Players by id`
 * `Top Up` transaction request need file to be uploaded, file path will stored at `players_banks.file_name` table. You can try to access file path manually from DBMS or pgAdmin4 then copy it and access the file source via ```http://localhost:8080/api/image?path=<file_path>``` !! .uploads folder is `gitignored` !! folder will automatically created if not exist.
 
 ### Postman Collection Preview

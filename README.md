@@ -6,6 +6,12 @@ Go: go version go1.21.3 darwin/arm64
   
 ## Getting Started
 
+clone project
+
+```
+[git clone ](https://github.com/mixodus/go-rest-test.git)
+```
+
 There are few things that need to be setup before running `go run main.go` command at the root project.
 
 ### Prerequisites
@@ -16,7 +22,7 @@ There are few things that need to be setup before running `go run main.go` comma
 
   We need to import DB for the Banks data. I only give two row of Banks, if you need more than it you can manually inject new row of Banks.
   
-*Setup `.env` file
+* Setup `.env` file
   Change it to your database information.
   ```
   DATABASE_HOST = "localhost"

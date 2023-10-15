@@ -15,12 +15,7 @@ import (
 func BankList(c *gin.Context) {
 	var banks []models.Bank
 	models.DB.Find(&banks)
-	res := dto.Response{
-		Status:  true,
-		Message: "Success",
-		Data:    banks,
-	}
-	c.JSON(http.StatusOK, res)
+	services.Response(c, http.StatusOK, true, "Success", banks)
 }
 
 // ADD PLAYER BANK
@@ -34,38 +29,24 @@ func AddPlayerBank(c *gin.Context) {
 			for i, fe := range ve {
 				out[i] = services.ErrorMsg{Field: fe.Field(), Message: services.GetErrorMsg(fe)}
 			}
-			res := dto.Response{
-				Status:  false,
-				Message: out[0].Field + ", " + out[0].Message,
-				Data:    nil,
-			}
-			c.AbortWithStatusJSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, out[0].Field+", "+out[0].Message, nil)
+		} else {
+			services.Response(c, http.StatusBadRequest, false, "Something wrong!", err.Error())
 		}
-
 		return
 	}
 
 	//CHECK BANK EXIST
 	var bank models.Bank
 	if err := models.DB.Where("bank_code = ?", playerBank.BankCode).First(&bank).Error; err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Bank not found",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Bank not found", nil)
 		return
 	}
 
 	//GET USER BY TOKEN
 	player, err := services.GetUserByToken(c)
 	if err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Failed",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Failed to get user by token", nil)
 		return
 	}
 
@@ -85,31 +66,16 @@ func AddPlayerBank(c *gin.Context) {
 		playersBankId := &playersBank.Id
 		player.PlayersBankId = playersBankId
 		if err := models.DB.Where("id = ?", player.Id).Save(&player).Error; err != nil {
-			res := dto.Response{
-				Status:  false,
-				Message: "Failed to update players bank id",
-				Data:    err,
-			}
-			c.AbortWithStatusJSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, "Failed to update players bank id", err.Error())
 			return
 		}
 
-		res := dto.Response{
-			Status:  true,
-			Message: "Success",
-			Data:    playersBank,
-		}
-		c.JSON(http.StatusOK, res)
+		services.Response(c, http.StatusOK, true, "Success", playersBank)
 		return
 	}
 
 	//IF PLAYER BANK EXIST THEN RETURN ERROR
-	res := dto.Response{
-		Status:  false,
-		Message: "Player bank already exist",
-		Data:    nil,
-	}
-	c.AbortWithStatusJSON(http.StatusBadRequest, res)
+	services.Response(c, http.StatusBadRequest, false, "Player bank already exist", nil)
 }
 
 // DELETE PLAYER BANK BY PLAYER TOKEN
@@ -117,82 +83,47 @@ func RemovePlayerBank(c *gin.Context) {
 	//GET PLAYER TOKEN
 	player, err := services.GetUserByToken(c)
 	if err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Failed",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Failed to get user by token", nil)
 		return
 	}
 
 	//CHECK PLAYER BANK EXIST, IF NOT EXIST THEN RETURN ERROR
 	var playersBank models.PlayersBank
 	if err := models.DB.Where("player_id = ?", player.Id).First(&playersBank).Error; err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Player's bank not found",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Player's bank not found", nil)
 		return
 	}
 
 	//UPDATE PLAYER'S BANK ID
 	player.PlayersBankId = nil
 	if err := models.DB.Where("id = ?", player.Id).Save(&player).Error; err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Failed to update players bank id",
-			Data:    err,
-		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Failed to update players bank id", err.Error())
 		return
 	}
 
 	//DELETE PLAYER BANK
 	models.DB.Delete(&playersBank)
-	res := dto.Response{
-		Status:  true,
-		Message: "Success",
-		Data:    nil,
-	}
-	c.JSON(http.StatusOK, res)
+	services.Response(c, http.StatusOK, true, "Success", nil)
 }
 
 func GetPlayerBank(c *gin.Context) {
 	//GET PLAYER TOKEN
 	player, err := services.GetUserByToken(c)
 	if err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Failed",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Failed to get user by token", nil)
 		return
 	}
 
 	//CHECK PLAYER BANK EXIST, IF NOT EXIST THEN RETURN ERROR
 	var playersBank models.PlayersBank
 	if err := models.DB.Joins("Bank").Where("player_id = ?", player.Id).First(&playersBank).Error; err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Player's bank not found",
-			Data:    nil,
-		}
 		if err.Error() == "record not found" {
-			c.AbortWithStatusJSON(http.StatusOK, res)
+			services.Response(c, http.StatusBadRequest, false, "Player's bank not found", nil)
 			return
 		}
-		c.AbortWithStatusJSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Failed to get player's bank", err.Error())
 		return
 	}
 
-	res := dto.Response{
-		Status:  true,
-		Message: "Success",
-		Data:    playersBank,
-	}
-	c.JSON(http.StatusOK, res)
+	services.Response(c, http.StatusOK, true, "Success", playersBank)
 }

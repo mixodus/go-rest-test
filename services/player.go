@@ -55,3 +55,8 @@ func LoginViaRedis(c *gin.Context, userInput *dto.LoginRequest, session string) 
 		return data, nil
 	}
 }
+
+func FilterPlayer(c *gin.Context, player *models.Player) models.Player {
+	player.Password = ""
+	return *player
+}

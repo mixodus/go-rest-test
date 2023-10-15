@@ -69,7 +69,7 @@ func Index(c *gin.Context) {
 	if player_created_at_after != "" {
 		created_at_after, err := time.Parse("2006-01-02", player_created_at_after)
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Invalid date format"})
+			services.Response(c, http.StatusBadRequest, false, "Invalid date format", nil)
 			return
 		}
 		fmt.Println(created_at_after)
@@ -79,7 +79,7 @@ func Index(c *gin.Context) {
 	if player_created_at_before != "" {
 		created_at_before, err := time.Parse("2006-01-02", player_created_at_before)
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Invalid date format"})
+			services.Response(c, http.StatusBadRequest, false, "Invalid date format", nil)
 			return
 		}
 		fmt.Println(created_at_before)
@@ -88,13 +88,7 @@ func Index(c *gin.Context) {
 
 	query.Preload("PlayersBank.Bank").Find(&player)
 
-	res := dto.Response{
-		Status:  true,
-		Message: "Success",
-		Data:    player,
-	}
-
-	c.JSON(http.StatusOK, res)
+	services.Response(c, http.StatusOK, true, "Success", player)
 }
 
 func GetPlayerById(c *gin.Context) {
@@ -103,31 +97,15 @@ func GetPlayerById(c *gin.Context) {
 	if err := models.DB.Where("id = ?", id).First(&player).Error; err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			res := dto.Response{
-				Status:  false,
-				Message: "User not found",
-				Data:    err.Error(),
-			}
-			c.JSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, "User not found", err.Error())
 			return
 		default:
-			res := dto.Response{
-				Status:  false,
-				Message: "Internal Server Error",
-				Data:    err.Error(),
-			}
-			c.JSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, "User not found", err.Error())
 			return
 		}
 	}
 
-	res := dto.Response{
-		Status:  true,
-		Message: "Get player by ID",
-		Data:    player,
-	}
-
-	c.JSON(http.StatusOK, res)
+	services.Response(c, http.StatusOK, true, "Success", player)
 }
 
 func Register(c *gin.Context) {
@@ -141,15 +119,11 @@ func Register(c *gin.Context) {
 			for i, fe := range ve {
 				out[i] = services.ErrorMsg{Field: fe.Field(), Message: services.GetErrorMsg(fe)}
 			}
-			res := dto.Response{
-				Status:  false,
-				Message: out[0].Field + ", " + out[0].Message,
-				Data:    nil,
-			}
-			c.AbortWithStatusJSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, out[0].Field+", "+out[0].Message, nil)
+			return
+		} else {
+			services.Response(c, http.StatusBadRequest, false, "Something wrong!", err.Error())
 		}
-
-		return
 	}
 
 	//HASH PASSWORD
@@ -169,12 +143,7 @@ func Register(c *gin.Context) {
 	//SAVE TO DB
 	if err := models.DB.Create(&dataPost).Error; err != nil {
 		log.Default().Println(err.Error())
-		res := dto.Response{
-			Status:  false,
-			Message: "User already exist",
-			Data:    err.Error(),
-		}
-		c.JSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "User already exist", err.Error())
 		return
 	}
 
@@ -187,13 +156,7 @@ func Register(c *gin.Context) {
 	}
 
 	//RES DATA
-	res := dto.Response{
-		Status:  true,
-		Message: "Success",
-		Data:    dataRes,
-	}
-
-	c.JSON(http.StatusOK, res)
+	services.Response(c, http.StatusOK, true, "Success", dataRes)
 }
 
 func Login(c *gin.Context) {
@@ -208,12 +171,9 @@ func Login(c *gin.Context) {
 			for i, fe := range ve {
 				out[i] = services.ErrorMsg{Field: fe.Field(), Message: services.GetErrorMsg(fe)}
 			}
-			res := dto.Response{
-				Status:  false,
-				Message: out[0].Field + ", " + out[0].Message,
-				Data:    nil,
-			}
-			c.AbortWithStatusJSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, out[0].Field+", "+out[0].Message, nil)
+		} else {
+			services.Response(c, http.StatusBadRequest, false, "Something wrong!", err.Error())
 		}
 
 		return
@@ -227,20 +187,10 @@ func Login(c *gin.Context) {
 	if session != "" {
 		res, err := services.LoginViaRedis(c, &userInput, session)
 		if err != nil {
-			res := dto.Response{
-				Status:  false,
-				Message: "Something went wrong!",
-				Data:    err.Error(),
-			}
-			c.JSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, "Something went wrong!", err.Error())
 			return
 		} else {
-			dataRes := dto.Response{
-				Status:  true,
-				Message: "Successfully login.",
-				Data:    res,
-			}
-			c.JSON(http.StatusOK, dataRes)
+			services.Response(c, http.StatusOK, true, "Successfully login!", res)
 			return
 		}
 	}
@@ -252,20 +202,10 @@ func Login(c *gin.Context) {
 	if err := models.DB.Where("email = ?", userInput.Email).First(&player).Error; err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			res := dto.Response{
-				Status:  false,
-				Message: "User not found",
-				Data:    err.Error(),
-			}
-			c.JSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, "User not found", err.Error())
 			return
 		default:
-			res := dto.Response{
-				Status:  false,
-				Message: "Internal Server Error",
-				Data:    err.Error(),
-			}
-			c.JSON(http.StatusBadRequest, res)
+			services.Response(c, http.StatusBadRequest, false, "Something went wrong!", err.Error())
 			return
 		}
 
@@ -273,23 +213,13 @@ func Login(c *gin.Context) {
 
 	//CHECK PASSWORD
 	if err := bcrypt.CompareHashAndPassword([]byte(player.Password), []byte(userInput.Password)); err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Wrong password",
-			Data:    err.Error(),
-		}
-		c.JSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Wrong password", err.Error())
 		return
 	}
 
 	tokenz, err := services.GeneratePlayerToken(c, &player)
 	if err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Something went wrong!",
-			Data:    err.Error(),
-		}
-		c.JSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Something went wrong!", err.Error())
 	}
 
 	//==== SET SESSION REDIS ====
@@ -329,14 +259,7 @@ func Login(c *gin.Context) {
 		"token": tokenz,
 	}
 
-	dataRes := dto.Response{
-		Status:  true,
-		Message: "Successfully login.",
-		Data:    data,
-	}
-
-	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, dataRes)
+	services.Response(c, http.StatusOK, true, "Successfully login!", data)
 }
 
 func Profile(c *gin.Context) {
@@ -344,12 +267,7 @@ func Profile(c *gin.Context) {
 	// fmt.Println("user id: ", id)
 	player, err := services.GetUserByToken(c)
 	if err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Something went wrong!",
-			Data:    err.Error(),
-		}
-		c.JSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Something went wrong!", err.Error())
 		return
 	}
 	dataRes := dto.ProfileResponse{
@@ -360,32 +278,18 @@ func Profile(c *gin.Context) {
 		Id:        player.Id,
 		Balance:   player.Balance,
 	}
-	res := dto.Response{
-		Status:  true,
-		Message: "Token OK",
-		Data:    dataRes,
-	}
-	c.JSON(http.StatusOK, res)
+	services.Response(c, http.StatusOK, true, "Token OK", dataRes)
 }
 
 func Logout(c *gin.Context) {
 	player, err := services.GetUserByToken(c)
 	if err != nil {
-		res := dto.Response{
-			Status:  false,
-			Message: "Something went wrong!",
-			Data:    err.Error(),
-		}
-		c.JSON(http.StatusBadRequest, res)
+		services.Response(c, http.StatusBadRequest, false, "Something went wrong!", err.Error())
 		return
 	}
 	redis := services.GetRedisClient()
 	redis.Del(c, player.Id)
 	redis.Del(c, player.Email)
-	res := dto.Response{
-		Status:  true,
-		Message: "Logout success",
-		Data:    nil,
-	}
-	c.JSON(http.StatusOK, res)
+
+	services.Response(c, http.StatusOK, true, "Logout success", nil)
 }

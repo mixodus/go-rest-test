@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mixodus/go-rest-test/config"
-	"github.com/mixodus/go-rest-test/dto"
 	"github.com/mixodus/go-rest-test/services"
 )
 
@@ -22,12 +21,7 @@ func Authenticate(c *gin.Context) {
 		token = strings.Split(token, " ")[1]
 	} else {
 		//return unauthorized
-		res := dto.Response{
-			Status:  false,
-			Message: "Unauthorized",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+		services.Response(c, http.StatusUnauthorized, false, "Unauthorized", nil)
 		return
 	}
 
@@ -43,41 +37,21 @@ func Authenticate(c *gin.Context) {
 		switch v.Errors {
 		case jwt.ValidationErrorSignatureInvalid:
 			fmt.Println("Error: Signature Invalid")
-			res := dto.Response{
-				Status:  false,
-				Message: "Error: Signature Invalid",
-				Data:    nil,
-			}
-			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+			services.Response(c, http.StatusUnauthorized, false, "Signature Invalid", nil)
 			return
 		case jwt.ValidationErrorExpired:
 			fmt.Println("Error: Token Expired")
-			res := dto.Response{
-				Status:  false,
-				Message: "Token Expired",
-				Data:    nil,
-			}
-			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+			services.Response(c, http.StatusUnauthorized, false, "Token Expired", nil)
 			return
 		default:
 			fmt.Println("Error: Can't handle this token")
-			res := dto.Response{
-				Status:  false,
-				Message: "unauthorized",
-				Data:    nil,
-			}
-			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+			services.Response(c, http.StatusUnauthorized, false, "Unauthorized", nil)
 			return
 		}
 	}
 
 	if !tokenz.Valid {
-		res := dto.Response{
-			Status:  false,
-			Message: "unauthorized",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+		services.Response(c, http.StatusUnauthorized, false, "Unauthorized", nil)
 		return
 	}
 
@@ -87,22 +61,12 @@ func Authenticate(c *gin.Context) {
 	redis := services.GetRedisClient()
 	storedTokenz := redis.Get(c, claims.Id).Val()
 	if storedTokenz == "" {
-		res := dto.Response{
-			Status:  false,
-			Message: "unauthorized",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+		services.Response(c, http.StatusUnauthorized, false, "Unauthorized", nil)
 		return
 	}
 	//check if token is current active token
 	if !(token == storedTokenz) {
-		res := dto.Response{
-			Status:  false,
-			Message: "unauthorized",
-			Data:    nil,
-		}
-		c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+		services.Response(c, http.StatusUnauthorized, false, "Unauthorized", nil)
 		return
 	}
 	// ==== end ====

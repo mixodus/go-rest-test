@@ -13,7 +13,7 @@ Clone the project
 git clone https://github.com/mixodus/go-rest-test.git
 ```
 
-There are few things that need to be setup before running `go run main.go` command at the root project.
+There are few things that need to be setup before running `go run main.go` command at the root project `cd go-rest-test`.
 
 ### Prerequisites
 

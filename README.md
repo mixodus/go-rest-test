@@ -9,7 +9,7 @@ Go: go version go1.21.3 darwin/arm64
 clone project
 
 ```
-[git clone ](https://github.com/mixodus/go-rest-test.git)
+git clone https://github.com/mixodus/go-rest-test.git
 ```
 
 There are few things that need to be setup before running `go run main.go` command at the root project.

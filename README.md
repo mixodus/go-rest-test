@@ -22,7 +22,7 @@ There are few things that need to be setup before running `go run main.go` comma
   - Create new database, and feel free to name the database.
   - Restore or Import  `go_test.sql` /  `go_test.backup` to your new database.
 
-  We need to import DB for the Banks data. I only give two row of Banks, if you need more than it you can manually inject new row of Banks.
+  We need to import DB for the Banks data. I only give two row of Banks, if you need more than that you can manually inject new row of Banks.
   
 * Setup `.env` file
   Change it to your database information.

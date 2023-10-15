@@ -48,6 +48,7 @@ Cheers!!🥂✨
 
 * `Login` uses redis to store session, if player re-login then player need to use new token else unauthorized.
 * Same as for `Logout`, uses redis. If player logout then no token in redis for check, so in any ways players always will be unautorized untill player do login again.
+* Authorization token uses `Bearer`. Token variable is saved on Postman root folder variables as `token`. Accessing via postman variable substitution => `{{token}}`.
 * For `Wallet` I create `transaction` table to count and refresh player's balance. `GET` API for `Player's Wallet` will always re-sum or count between `transaction.transaction_type` (DEBIT/CREDIT) and restore it in `players.balance` column
 * Players need to have Bank information in order to make `Top Up` or transactions.
 * Players only can have ONE bank information. If want to update or make a new one, player need to delete previous bank by hit/consume `DELETE Player Bank` API.
